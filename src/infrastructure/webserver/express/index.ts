@@ -1,10 +1,9 @@
 import { env } from '../../env'
 
 import { createApp } from './app'
-import { Repositories } from '../../../application/port'
 import { createRouter } from './routes'
-import errorHandler from '../../../application/errors/ErrorHandler'
 import logger from '../../logger/logger'
+import { Repositories } from '../../../application/port'
 
 /**
  * function that create a web server with express and use  route
@@ -22,8 +21,6 @@ export const createServer = (repository: Repositories): void => {
   // add the router to the express app
   app.use('/', createRouter(repository))
 
-  // Error-handling middleware
-  app.use(errorHandler)
 
   // make the express app listen to the port taken from the environment
   app.listen(port, () => {
