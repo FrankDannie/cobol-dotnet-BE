@@ -1,0 +1,34 @@
+import Winston from 'winston'
+const transports: Array<Winston.transport> = []
+
+transports.push(
+  new Winston.transports.Console({
+    format: Winston.format.combine(
+      Winston.format.cli(),
+      Winston.format.splat()
+    ),
+  })
+)
+
+const logger: Winston.Logger = Winston.createLogger({
+  level: process.env['LOG_LEVEL'] || 'info',
+  levels: Winston.config.npm.levels,
+  format: Winston.format.combine(
+    Winston.format.timestamp({
+      format: 'YYYY-MM-DD HH:mm:ss',
+    }),
+    Winston.format.errors({ stack: true }),
+    Winston.format.splat(),
+    Winston.format.json()
+  ),
+  silent: false,
+  transports,
+})
+
+export const LoggerStream = {
+  write: (msg: string): void => {
+    logger.info(msg.replace(/(\n)/gm, ''))
+  },
+}
+
+export default logger
